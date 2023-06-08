@@ -43,6 +43,7 @@
       header="LET'S COLLAB"
       section="3 - Contact"
       email="lastNameFirstName@email.com"
+      :phone="phone"
       :socials="socials"
       developer="peu.dev"
       :portrait="require('@/assets/portrait/img-2.jpg')"
@@ -133,5 +134,6 @@ let naturePhotos = [
 ]
 
 let socials = inject('socials'),
-  anchors = inject('anchors');
+  anchors = inject('anchors'),
+  phone = inject('phone');
 </script>

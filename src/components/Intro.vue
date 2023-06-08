@@ -4,15 +4,15 @@
     <div class="section-header-container">
         <div class="header" ref="headerContainer">
             <h1 id="header">{{ header }}</h1>
-            <h3 id="author">by <a>{{ author }}</a></h3>
+            <h3 id="author">by <a href="#contact">{{ author }}</a></h3>
         </div>
     </div>
 
-    <a href="#contact"><div class="circle-button-container" v-if="isDesktop">
+    <a href="#contact" v-if="isDesktop"><div class="circle-button-container">
         <button>{{ callToActionMessage }}</button>
     </div></a>
 
-    <a href="#contact"><div class="circle-button-container" v-if="isTablet || isMobile">
+    <a href="#contact" v-if="isTablet || isMobile"><div class="circle-button-container">
         <button>{{ callToActionMessage }}</button>
     </div></a>
 
@@ -39,11 +39,15 @@
         </div>
 
         <div class="photo-container" v-for="(photos, index) in introPhotos" :key="index" :id="'photo-container-' + index" ref="photoContainer">
-            <img :src="photos.src">
+            <img ref="photo" :src="photos.src" :alt="photos.alt" :title="photos.alt">
             <a :href="`#${anchors[index]}`"><p>{{ photos.caption }}</p></a>
             <div class="photo-borders"></div>
             <svg class="caption-link-line" width="90" height="7" viewBox="0 0 90 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1.51471 3.5428C3.64358 4.28328 6.97714 3.80132 9.05315 3.74445C25.4469 3.2953 41.9942 1.92888 58.3942 2.47253C68.324 2.80169 77.85 5.34996 87.7879 4.38041" stroke="#FFAA67" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            <svg class="expand" viewBox="0 0 62 62" fill="none" xmlns="http://www.w3.org/2000/svg"
+                @mouseover="merpOver($refs.photo[index])">
+                <path d="M22.6666 60.1667H1.83331V39.3333M39.3333 1.83333H60.1666V22.6667" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </div>
     </div>
@@ -64,7 +68,7 @@
             </svg>
 
             <div class="photo-container" :id="'photo-container-' + index" ref="photoContainer">
-                <img :src="photos.src">
+                <img :src="photos.src" :alt="photos.alt" :title="photos.alt">
                 <a :href="`#${anchors[index]}`"><p>{{ photos.caption }}</p></a>
                 <div class="photo-borders"></div>
                 <svg class="caption-link-line" viewBox="0 0 90 7" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -91,6 +95,7 @@ const props = defineProps({
 let headerContainer = ref(null);
 
 let photoContainer = ref(null),
+    photo = ref(null),
     captionLinkLine = ref(null);
 
 let isMobile = inject('isMobile'),
@@ -100,6 +105,9 @@ let isMobile = inject('isMobile'),
     observer = inject('observer'),
     adjustPhotoWithScrolling = inject('adjustPhotoWithScrolling');
 
+const merpOver = (photo) => {
+    console.log(photo);
+}
 
 onMounted(() => {
     observer.observe(headerContainer.value);
@@ -165,7 +173,6 @@ a{
     grid-template-columns: 1fr 1fr 1fr;
     gap: 50px;
     overflow: hidden;
-    margin-top: -5em;
     padding-bottom: 5em;
 }
 .caption-link-line{
@@ -174,6 +181,21 @@ a{
     left: 20px;
     z-index: 1;
 }
+.expand{
+    position: absolute;
+    bottom: 2%;
+    right: 20px;
+    width: 1.5em;
+    height: 1.5em;
+    z-index: 1;
+    cursor: pointer;
+    transition: width 0.3s ease, height 0.3s ease;
+}
+.expand:hover{
+    width: 2em;
+    height: 2em;
+}
+
 .hanger{
     width: 100%;
     height: auto;
@@ -189,7 +211,7 @@ a{
 }
 #hanging-clip-1{
     top: 90%;
-    left: 50%;
+    left: 45%;
     transform: rotate(-6deg);
 }
 #hanging-clip-2{
@@ -214,7 +236,7 @@ a{
 #photo-container-0{
     grid-area: two;
     top: -10%;
-    left: 0;
+    left: 10%;
     transform: rotate(3deg);
 }
 #photo-container-1{
@@ -241,11 +263,9 @@ a{
 }
 @media only screen and (max-width: 1024px){
     .circle-button-container{
-        position: relative;
-        top: unset;
-        left: unset;
-        transform: unset;
-        margin-inline: auto;
+        top: 7%;
+        left: 90%;
+        transform: translate(-90%, -7%);
         width: 200px;
         height: 200px;
     }
@@ -276,6 +296,14 @@ a{
     }
 }
 @media only screen and (max-width: 768px){
+    .section-header-container{
+        padding-bottom: 9.5rem;
+    }
+    .circle-button-container{
+        top: 10%;
+        left: 50%;
+        transform: translate(-50%, -10%);
+    }
     .section-container{
         padding-block: unset;
     }
@@ -290,7 +318,7 @@ a{
         top: 5%;
     }
     #photo-container-1{
-        left: 6%;
+        left: 1%;
         margin-top: 3%;
     }
     #hanging-clip-2{
@@ -298,7 +326,7 @@ a{
         left: 50%;
     }
     #photo-container-2{
-        left: 4%;
+        left: 2%;
         margin-top: 3%;
     }
     

@@ -9,14 +9,14 @@
 
     <div class="portrait-n-desc-container">
         <div class="portrait-container" ref="portraitContainer">
-            <img :src="portrait">
+            <img :src="portrait" :alt="portrait.alt" :title="portrait.alt">
             <p>{{ caption }}</p>
             <div class="portrait-borders"></div>
         </div>
         <div class="desc-container">
             <p>{{ desc }}</p>
             <div class="social-media-captions">
-                <a v-for="socials in socials" :href="socials.link"><img  :src="socials.src" :alt="socials.alt"></a>
+                <a v-for="socials in socials" :href="socials.link"><img  :src="socials.src" :alt="socials.alt" :title="socials.alt"></a>
             </div>
         </div>
     </div>

@@ -9,20 +9,24 @@
 
     <div class="grid-container">
         <div class="contact-info-container">
-            <div class="email">
+            <div class="info">
                 <h4>My email</h4>
-                <a :href="email"><p>{{ email }}</p></a>
+                <a :href="`mailto:${email}`" tabindex="0"><p>{{ email }}</p></a>
+            </div>
+            <div class="info">
+                <h4>My phone</h4>
+                <a :href="`tel:${phone}`" tabindex="0"><p>{{ phone}}</p></a>
             </div>
             <div class="socials">
                 <h4>Socials</h4>
-                <a v-for="icons in socials">
+                <a v-for="icons in socials" tabindex="0">
                     <img :src="icons.src" :alt="icons.alt" :title="icons.alt" :href="icons.link">
                 </a>
             </div>
 
             <div class="credits">
                 <h5>Powered by</h5>
-                <a><p>{{ developer }}</p></a>
+                <a href="https://peuwebdesign.com" target="_blank" tabindex="0"><p>{{ developer }}</p></a>
             </div>
         </div>
 
@@ -42,6 +46,7 @@ const props = defineProps({
     header: String,
     section: String,
     email: String,
+    phone: Number,
     socials: Object,
     developer: String,
     portrait: String,
@@ -98,6 +103,9 @@ onMounted(() => {
     transform: translate(-50%, -50%) scale(1);
     z-index: -2;
     transition: transform 0.5s ease, opacity 0.5s ease;
+}
+.info a{
+    display: block;
 }
 .socials img{
     padding-top: 20px;

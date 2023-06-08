@@ -2,7 +2,7 @@
   <nav v-if="isDesktop">
     <ul>
       <li>
-        <a href="#home">Home</a>
+        <a href="#home" tabindex="0">Home</a>
         <svg class="nav-link-line" viewBox="0 0 90 7" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1.51471 3.5428C3.64358 4.28328 6.97714 3.80132 9.05315 3.74445C25.4469 3.2953 41.9942 1.92888 58.3942 2.47253C68.324 2.80169 77.85 5.34996 87.7879 4.38041" stroke="#FFAA67" stroke-width="3" stroke-linecap="round"/>
         </svg>
@@ -39,19 +39,23 @@
       </li>
     </ul>
 
-    <a href="#contact"><button>Let's Talk</button></a>
+    <a href="#contact"><button>Let's Collab</button></a>
   </nav>
 
   <nav v-if="isMobile">
-    <svg class="phone" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <a :href="`tel:${phone}`" alt="Phone" title="Click to Call" aria-label="Click to Call"><svg class="phone" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M6.62 10.79C8.06 13.62 10.38 15.93 13.21 17.38L15.41 15.18C15.68 14.91 16.08 14.82 16.43 14.94C17.55 15.31 18.76 15.51 20 15.51C20.55 15.51 21 15.96 21 16.51V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.5C8.05 3 8.5 3.45 8.5 4C8.5 5.25 8.7 6.45 9.07 7.57C9.18 7.92 9.1 8.31 8.82 8.59L6.62 10.79Z"/>
-    </svg>
+    </svg></a>
+    
 
     <!-- <svg class="hamburger" viewBox="0 0 100 100" @click="navToggle = !navToggle">
       <path d="M12.5 25H87.5V33.3333H12.5V25ZM12.5 45.8333H87.5V54.1667H12.5V45.8333ZM12.5 66.6667H87.5V75H12.5V66.6667Z"/>
     </svg> -->
 
-    <div class="hamburger">
+    <div class="hamburger" ref="hamburger" alt="Hamburger" title="Hamburger"
+      @click="navToggle = !navToggle; 
+        animateMobileHamburger(navToggle);
+        navMenuHeight = `${100}dvh`">
       <span></span>
       <span></span>
       <span></span>
@@ -62,7 +66,7 @@
     * MOBIILE POPUP NAV BAR
     * ONLY OCCURS WHEN CLICKING THE HAMBURGER 
   -->
-  <div v-if="isMobile && navToggle" class="nav-mobile-menu">
+  <div v-if="isMobile && navToggle" class="nav-mobile-menu" :style="{height: navMenuHeight}">
     <ul>
       <a href="#home" @click="navToggle =! navToggle"><li>
         Home
@@ -98,6 +102,9 @@ let isMobile = ref(false),
   isDesktop = ref(false),
   navToggle = ref(false);
 
+let hamburger = ref(null),
+  navMenuHeight = ref(null);
+
 const checkMobile = () => {
   // return window.innerWidth <= 768 ? isMobile.value = true : isMobile.value = false;
   if (window.innerWidth <= 768){
@@ -125,6 +132,8 @@ checkMobile();
 checkTablet();
 checkDesktop();
 
+// Creates the effect where the text is hidden at the bottom and summons upward
+// Adjust CSS for more specific animations
 const animateHeader = (div) => {
   let header = new SplitType(div);
   gsap.to(header.chars, {
@@ -135,7 +144,20 @@ const animateHeader = (div) => {
       duration: 0.05
   })
 }
-
+// Animate spans of the hamburger to make an X
+const animateMobileHamburger = (toggle) => {
+  let span = Array.from(hamburger.value.children);
+  if (toggle){
+    span[0].style.transform = `rotate(${45}deg) translate(${7}px, ${5}px)`;
+    span[1].style.opacity = 0;
+    span[2].style.transform = `rotate(${-45}deg) translate(${10}px, ${-5}px)`;
+  } else {
+    span[0].style.transform = `unset`;
+    span[1].style.opacity = 1;
+    span[2].style.transform = `unset`;
+  }
+}
+// Use observer to trigger animateHeader effect
 const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
         if (entry.isIntersecting){
@@ -150,6 +172,8 @@ const observer = new IntersectionObserver((entries) => {
     })
 })
 
+// INPUT CONTACT INFO HERE
+let phone = 12345678910;
 let socials = [
   {
     src: require('@/assets/socials/instagram.svg'),
@@ -171,8 +195,10 @@ let socials = [
   }
 ]
 
+// These change the "hanging photos" 
 let anchors = ["architecture", "lifestyle", "nature"];
 
+// Adjust the imgs when scrolling up or down
 let photoAdjustVar = 0;
 const adjustPhotoWithScrolling = (img) => {
   if (isMobile){
@@ -181,6 +207,7 @@ const adjustPhotoWithScrolling = (img) => {
     photoAdjustVar = 0.3;
   }
   if (img){
+    // Check whether or not this func is used in an array of imgs or a single portrait
     if (img.length == 1 || img.length == undefined)
       img.children[0].style.transform = `translateY(${-(img.getBoundingClientRect().y * photoAdjustVar)}px)`;
     else {
@@ -192,7 +219,6 @@ const adjustPhotoWithScrolling = (img) => {
     
 }
 
-
 provide('isMobile', isMobile);
 provide('isTablet', isTablet);
 provide('isDesktop', isDesktop);
@@ -200,7 +226,8 @@ provide('animateHeader', animateHeader);
 provide('observer', observer);
 
 provide('socials', socials),
-provide('anchors', anchors);
+provide('anchors', anchors),
+provide('phone', phone);
 
 provide('adjustPhotoWithScrolling', adjustPhotoWithScrolling);
 
@@ -208,7 +235,6 @@ onMounted(() => {
   window.addEventListener('resize', checkMobile);
   window.addEventListener('resize', checkTablet);
   window.addEventListener('resize', checkDesktop);
-
 })
 
 </script>
@@ -256,6 +282,9 @@ p{
   font-size: var(--font-size-p);
 }
 
+/*
+ * NAVIGATION STUFF
+ */
 nav{
   display: flex;
   align-items: center;
@@ -290,6 +319,18 @@ nav ul li svg{
   left: 0;
   z-index: 1001;
 }
+nav ul li svg path{
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  transition: stroke-dashoffset 0.5s ease-in-out;
+}
+nav ul li:hover svg path{
+  stroke-dashoffset: 0;
+}
+nav ul li a:focus{
+  outline: none;
+  border: 3px solid var(--color-buttons-n-links);
+}
 a{
   cursor: pointer;
   color: var(--color-buttons-n-links);
@@ -307,6 +348,10 @@ button{
   max-height: var(--height-nav);
   border: none;
   cursor: pointer;
+}
+a:focus, button:focus{
+  outline: none;
+  border: 3px solid var(--color-buttons-n-links);
 }
 .section-header-container{
   display: flex;
@@ -363,6 +408,9 @@ button{
 }
 .social-media-captions{
   position: absolute;
+}
+.social-media-captions a{
+  display: inline-block;
 }
 .social-media-captions img{
   padding-inline: 10px;
@@ -425,14 +473,7 @@ button{
   height: 100%;
   object-fit: cover;
 }
-nav ul li svg path{
-    stroke-dasharray: 200;
-    stroke-dashoffset: 200;
-    transition: stroke-dashoffset 0.5s ease-in-out;
-}
-nav ul li:hover svg path{
-    stroke-dashoffset: 0;
-}
+
 /* 
  * PHOTO GRID
  */
@@ -561,12 +602,14 @@ nav ul li:hover svg path{
     flex-direction: column;
     width: 40px;
     height: 100%;
+    cursor: pointer;
   }
   .hamburger span{
     width: 100%;
     height: 3px;
     margin-block: 0.2rem;
     background-color: var(--color-buttons-n-links);
+    transition: all 0.5s ease;
   }
   .phone{
     width: 35px;
@@ -578,12 +621,13 @@ nav ul li:hover svg path{
   }
   .nav-mobile-menu{
     position: fixed;
-    top: 0;
+    bottom: 0;
     left: 0;
-    height: 100dvh;
+    height: 0dvh;
     width: 100%;
     background-color: var(--color-text);
     z-index: 999;
+    transition: height 0.3s ease;
   }
   .nav-mobile-menu ul{
     display: grid;
