@@ -12,8 +12,7 @@
     <About
       header="HI, I'M [INSERT NAME HERE]"
       section="1 - About"
-      :portrait="require('@/assets/portrait/img-1.jpg')"
-      caption="Something about this picture"
+      :portrait="portraits[0]"
       desc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
       :socials="socials"
     />
@@ -46,8 +45,7 @@
       :phone="phone"
       :socials="socials"
       developer="peu.dev"
-      :portrait="require('@/assets/portrait/img-2.jpg')"
-      caption="Something about this photo"
+      :portrait="portraits[1]"
     />
   </div>
 </template>
@@ -59,7 +57,21 @@ import About from '@/components/About.vue'
 import Photos from '@/components/Photos.vue';
 import Outro from '@/components/Outro.vue'
 
+let portraits = [
+  // About
+  {
+    src: require('@/assets/portrait/img-1.jpg'),
+    caption: "Something about this picture",
+    alt: "img description goes here",
+  },
+  // Footer
+  {
+    src: require('@/assets/portrait/img-2.jpg'),
+    caption: "Something about this picture",
+    alt: "img description goes here",
+  },
 
+]
 
 let introPhotos = [
   {

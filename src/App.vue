@@ -42,20 +42,22 @@
     <a href="#contact"><button>Let's Collab</button></a>
   </nav>
 
+  <!--
+    * MOBILE NAV BAR
+  -->
   <nav v-if="isMobile">
     <a :href="`tel:${phone}`" alt="Phone" title="Click to Call" aria-label="Click to Call"><svg class="phone" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M6.62 10.79C8.06 13.62 10.38 15.93 13.21 17.38L15.41 15.18C15.68 14.91 16.08 14.82 16.43 14.94C17.55 15.31 18.76 15.51 20 15.51C20.55 15.51 21 15.96 21 16.51V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.5C8.05 3 8.5 3.45 8.5 4C8.5 5.25 8.7 6.45 9.07 7.57C9.18 7.92 9.1 8.31 8.82 8.59L6.62 10.79Z"/>
     </svg></a>
-    
 
-    <!-- <svg class="hamburger" viewBox="0 0 100 100" @click="navToggle = !navToggle">
-      <path d="M12.5 25H87.5V33.3333H12.5V25ZM12.5 45.8333H87.5V54.1667H12.5V45.8333ZM12.5 66.6667H87.5V75H12.5V66.6667Z"/>
-    </svg> -->
-
-    <div class="hamburger" ref="hamburger" alt="Hamburger" title="Hamburger"
+    <div 
+      class="hamburger" 
+      ref="hamburger" 
+      alt="Hamburger" title="Hamburger"
       @click="navToggle = !navToggle; 
         animateMobileHamburger(navToggle);
-        navMenuHeight = `${100}dvh`">
+        navMenuHeight = `${100}dvh`"
+    >
       <span></span>
       <span></span>
       <span></span>
@@ -68,25 +70,59 @@
   -->
   <div v-if="isMobile && navToggle" class="nav-mobile-menu" :style="{height: navMenuHeight}">
     <ul>
-      <a href="#home" @click="navToggle =! navToggle"><li>
-        Home
-      </li></a>
-      <a href="#about" @click="navToggle =! navToggle"><li>
-        About
-      </li></a>
-      <a href="#architecture" @click="navToggle =! navToggle"><li>
-        Architecture
-      </li></a>
-      <a href="#lifestyle" @click="navToggle =! navToggle"><li>
-        Lifestyle
-      </li></a>
-      <a href="#nature" @click="navToggle =! navToggle"><li>
-        Nature
-      </li></a>
-      <a href="#contact" @click="navToggle =! navToggle"><li>
-        Contact
-      </li></a>
-      <a v-for="socials in socials" :href="socials.link" @click="navToggle =! navToggle">
+      <a 
+        href="#home" 
+        @click="navToggle =! navToggle,
+          animateMobileHamburger(navToggle)"
+      >
+        <li>Home</li>
+      </a>
+
+      <a 
+        href="#about" 
+        @click="navToggle =! navToggle,
+          animateMobileHamburger(navToggle)"
+      >
+        <li>About</li>
+      </a>
+
+      <a 
+        href="#architecture" 
+        @click="navToggle =! navToggle,
+          animateMobileHamburger(navToggle)"
+      >
+        <li>Architecture</li>
+      </a>
+
+      <a 
+        href="#lifestyle" 
+        @click="navToggle =! navToggle,
+          animateMobileHamburger(navToggle)"
+      >
+        <li>Lifestyle</li>
+      </a>
+
+      <a 
+        href="#nature" 
+        @click="navToggle =! navToggle,
+          animateMobileHamburger(navToggle)"
+      >
+        <li>Nature</li>
+      </a>
+
+      <a 
+        href="#contact" 
+        @click="navToggle =! navToggle,
+          animateMobileHamburger(navToggle)"
+      >
+        <li>Contact</li>
+      </a>
+
+      <a 
+        v-for="socials in socials" 
+        :href="socials.link" 
+        @click="navToggle =! navToggle"
+      >
         <li v-html="socials.svg"></li>
       </a>
     </ul>
@@ -95,7 +131,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, provide } from 'vue';
+import { ref, onMounted, provide, isRef } from 'vue';
 
 let isMobile = ref(false),
   isTablet = ref(false),
@@ -159,17 +195,17 @@ const animateMobileHamburger = (toggle) => {
 }
 // Use observer to trigger animateHeader effect
 const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-        if (entry.isIntersecting){
-          if (entry.target.className == "header"){
-            animateHeader(entry.target.children[0]);
-            entry.target.classList.add('shown');
-            if (entry.target.children.length > 1){
-              animateHeader(entry.target.children[1]);
-            }
-          }
+  entries.forEach((entry) => {
+    if (entry.isIntersecting){
+      if (entry.target.className == "header"){
+        animateHeader(entry.target.children[0]);
+        entry.target.classList.add('shown');
+        if (entry.target.children.length > 1){
+          animateHeader(entry.target.children[1]);
         }
-    })
+      }
+    }
+  })
 })
 
 // INPUT CONTACT INFO HERE
@@ -219,11 +255,34 @@ const adjustPhotoWithScrolling = (img) => {
     
 }
 
+// When clicking on a photo, trigger this func 
+// MODAL - Create a modal variable in the component either single or array with default values of FALSE
+// INDEX is used for array photos to target a specific photo for the modal
+const toggleSpecificModal = (modal, index) => {
+  if (index == undefined){
+    modal = !modal;
+  } else {
+    for (let i = 0; i < modal.length; i++){
+      if (i == index){
+        modal[index] = !modal[index];
+      } else {
+        modal[i] = false;
+      }
+    }
+  }
+}
+
+const changeMerp = (merp) => {
+  merp++;
+}
+
 provide('isMobile', isMobile);
 provide('isTablet', isTablet);
 provide('isDesktop', isDesktop);
 provide('animateHeader', animateHeader);
 provide('observer', observer);
+provide('toggleSpecificModal', toggleSpecificModal);
+provide('changeMerp', changeMerp);
 
 provide('socials', socials),
 provide('anchors', anchors),
@@ -434,6 +493,7 @@ a:focus, button:focus{
   border-top: 20px solid var(--color-photo-borders);
   border-bottom: 50px solid var(--color-photo-borders);
   z-index: 1;
+  cursor: pointer;
 }
 .portrait-container{
   position: relative;
@@ -510,6 +570,19 @@ a:focus, button:focus{
   transform: translateY(1.5em) rotate(25deg);
   transition: transform 0.3s;
   line-height: var(--font-size-h1);
+}
+
+/* 
+ * MODALS 
+ */
+.modal-enter-active,
+.modal-leave-active{
+    transition: all 0.3s ease;
+}
+.modal-enter-from,
+.modal-leave-to{
+    opacity: 0;
+    transform: scale(1.1);
 }
 
 /* 
@@ -657,6 +730,7 @@ a:focus, button:focus{
   --color-shadow: #D9D9D9;
   --color-photo-borders: #f5f5f5;
   --color-photo-desc: #261514;
+  --color-modal: rgb(30, 30, 31, 0.6);
 
   --font-family-h: 'Dela Gothic One', cursive;
   --font-family-links: 'Bad Script', cursive;

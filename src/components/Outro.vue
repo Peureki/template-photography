@@ -31,8 +31,8 @@
         </div>
 
         <div class="portrait-container" ref="portraitContainer">
-            <img :src="portrait" :alt="portrait.alt" :title="portrait.alt">
-            <p>{{ caption }}</p>
+            <img :src="portrait.src" :alt="portrait.alt" :title="portrait.alt">
+            <p>{{ portrait.caption }}</p>
             <div class="portrait-borders"></div>
         </div>
     </div>
@@ -49,8 +49,7 @@ const props = defineProps({
     phone: Number,
     socials: Object,
     developer: String,
-    portrait: String,
-    caption: String,
+    portrait: Object,
 })
 
 let observer = inject('observer'),

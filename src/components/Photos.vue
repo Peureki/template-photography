@@ -7,11 +7,30 @@
         </div>
     </div>
 
+    <!--
+        * MODAL CONTAINER
+        * SHOWS when the user clicks on the specific photo or expand icon
+    -->
+    <div
+        v-for="(photos, index) in photos" :key="index"
+    >
+        <TransitionGroup name="modal">
+        <Modal
+            v-if="showModal[index]"
+            :photo="photos"
+            @close="toggleSpecificModal(showModal, index)"
+        />
+        </TransitionGroup>
+    </div>
+
     <div class="photo-grid">
-        <div class="photo-container" ref="photoContainer" v-for="photos in photos">
+        <div class="photo-container" ref="photoContainer" v-for="(photos, index) in photos">
             <img :src="photos.src" :alt="photos.alt" :title="photos.alt">
             <p> {{ photos.caption }}</p>
-            <div class="photo-borders"></div>
+            <div 
+                class="photo-borders"
+                @click="toggleSpecificModal(showModal, index)"
+            ></div>
         </div>
     </div>
 
@@ -23,6 +42,7 @@
 
 <script setup>
 import {ref, inject, onMounted} from 'vue';
+import Modal from '@/components/child/Modal.vue';
 
 const props = defineProps({
     header: String,
@@ -32,10 +52,13 @@ const props = defineProps({
 })
 
 let observer = inject('observer'),
-    adjustPhotoWithScrolling = inject('adjustPhotoWithScrolling');
+    adjustPhotoWithScrolling = inject('adjustPhotoWithScrolling'),
+    toggleSpecificModal = inject('toggleSpecificModal');
 
 let headerContainer = ref(null),
     photoContainer = ref(null);
+
+let showModal = ref([false, false, false]);
 
 onMounted(() => {
     observer.observe(headerContainer.value);

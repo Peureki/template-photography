@@ -16,6 +16,25 @@
         <button>{{ callToActionMessage }}</button>
     </div></a>
 
+    <!--
+        * MODAL CONTAINER
+        * SHOWS when the user clicks on the specific photo or expand icon
+    -->
+    <div
+        v-for="(photos, index) in introPhotos" :key="index"
+    >
+        <TransitionGroup name="modal">
+        <Modal
+            v-if="showModal[index]"
+            :photo="photos"
+            @close="toggleSpecificModal(showModal, index)"
+        />
+        </TransitionGroup>
+    </div>
+    
+    <!--
+        * HANGING PHOTO CONTAINERS
+    -->
     <div class="hanging-photos-container" v-if="isDesktop">
         <div class="hanger-container">
             <svg class="hanger" height="229" viewBox="0 0 1440 229" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -38,15 +57,31 @@
             </svg>
         </div>
 
-        <div class="photo-container" v-for="(photos, index) in introPhotos" :key="index" :id="'photo-container-' + index" ref="photoContainer">
-            <img ref="photo" :src="photos.src" :alt="photos.alt" :title="photos.alt">
-            <a :href="`#${anchors[index]}`"><p>{{ photos.caption }}</p></a>
-            <div class="photo-borders"></div>
+        <div 
+            class="photo-container" 
+            ref="photoContainer"
+            v-for="(photos, index) in introPhotos" :key="index" 
+            :id="'photo-container-' + index"
+        >
+            <img 
+                ref="photo" 
+                :src="photos.src" :alt="photos.alt" :title="photos.alt"
+            >
+            <a :href="`#${anchors[index]}`">
+                <p>{{ photos.caption }}</p>
+            </a>
+            <div 
+                class="photo-borders"
+                @click="toggleSpecificModal(showModal, index);">
+            </div>
             <svg class="caption-link-line" width="90" height="7" viewBox="0 0 90 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1.51471 3.5428C3.64358 4.28328 6.97714 3.80132 9.05315 3.74445C25.4469 3.2953 41.9942 1.92888 58.3942 2.47253C68.324 2.80169 77.85 5.34996 87.7879 4.38041" stroke="#FFAA67" stroke-width="3" stroke-linecap="round"/>
             </svg>
-            <svg class="expand" viewBox="0 0 62 62" fill="none" xmlns="http://www.w3.org/2000/svg"
-                @mouseover="merpOver($refs.photo[index])">
+            <svg 
+                class="expand" 
+                viewBox="0 0 62 62" fill="none" xmlns="http://www.w3.org/2000/svg"
+                @click="toggleSpecificModal(showModal, index);"
+            >
                 <path d="M22.6666 60.1667H1.83331V39.3333M39.3333 1.83333H60.1666V22.6667" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </div>
@@ -67,12 +102,28 @@
                 <line x1="20.0189" y1="67.346" x2="0.0189209" y2="67.346" stroke="#A7886D" stroke-width="3"/>
             </svg>
 
-            <div class="photo-container" :id="'photo-container-' + index" ref="photoContainer">
+            <div 
+                class="photo-container" 
+                :id="'photo-container-' + index" 
+                ref="photoContainer"
+            >
                 <img :src="photos.src" :alt="photos.alt" :title="photos.alt">
-                <a :href="`#${anchors[index]}`"><p>{{ photos.caption }}</p></a>
-                <div class="photo-borders"></div>
+                <a :href="`#${anchors[index]}`">
+                    <p>{{ photos.caption }}</p>
+                </a>
+                <div 
+                    class="photo-borders"
+                    @click="toggleSpecificModal(showModal, index)"
+                ></div>
                 <svg class="caption-link-line" viewBox="0 0 90 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1.51471 3.5428C3.64358 4.28328 6.97714 3.80132 9.05315 3.74445C25.4469 3.2953 41.9942 1.92888 58.3942 2.47253C68.324 2.80169 77.85 5.34996 87.7879 4.38041" stroke="#FFAA67" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <svg 
+                    class="expand" 
+                    viewBox="0 0 62 62" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    @click="toggleSpecificModal(showModal, index);"
+                >
+                    <path d="M22.6666 60.1667H1.83331V39.3333M39.3333 1.83333H60.1666V22.6667" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
         </div>
@@ -83,6 +134,7 @@
 
 <script setup>
 import { ref, onMounted, inject } from 'vue';
+import Modal from '@/components/child/Modal.vue';
 
 const props = defineProps({
     header: String,
@@ -96,18 +148,15 @@ let headerContainer = ref(null);
 
 let photoContainer = ref(null),
     photo = ref(null),
-    captionLinkLine = ref(null);
+    showModal = ref([false, false, false]);
 
 let isMobile = inject('isMobile'),
     isTablet = inject('isTablet'),
     isDesktop = inject('isDesktop'),
     animateHeader = inject('animateHeader'),
     observer = inject('observer'),
-    adjustPhotoWithScrolling = inject('adjustPhotoWithScrolling');
-
-const merpOver = (photo) => {
-    console.log(photo);
-}
+    adjustPhotoWithScrolling = inject('adjustPhotoWithScrolling'),
+    toggleSpecificModal = inject('toggleSpecificModal');
 
 onMounted(() => {
     observer.observe(headerContainer.value);
@@ -165,6 +214,9 @@ a{
   padding: unset;
   text-decoration: none;
 }
+
+
+
 .hanging-photos-container{
     display: grid;
     grid-template-areas: 
@@ -255,6 +307,9 @@ a{
     left: 20px;
     z-index: 2;
 }
+
+
+
 @media only screen and (max-width: 1610px){
     .circle-button-container{
         top: 15%;
