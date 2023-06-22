@@ -11,13 +11,14 @@
         * MODAL CONTAINER
         * SHOWS when the user clicks on the specific photo or expand icon
     -->
-    <TransitionGroup name="modal">
+    <Transition name="modal">
     <Modal
-        v-if="showModal"
+        v-if="showModal[0]"
         :photo="portrait"
-        @close="toggleSpecificModal(showModal)"
+        @close="toggleSpecificModal(showModal, 0),
+            console.log(showModal)"
     />
-    </TransitionGroup>
+    </Transition>
 
     <div class="portrait-n-desc-container">
         <div class="portrait-container" ref="portraitContainer">
@@ -25,9 +26,16 @@
             <p>{{ portrait.caption }}</p>
             <div 
                 class="portrait-borders"
-                @click="changeMerp(merp),
-                    checkMerp(merp)"
+                @click="toggleSpecificModal(showModal, 0),
+                    console.log(showModal)"
             ></div>
+            <svg 
+                class="expand" 
+                viewBox="0 0 62 62" fill="none" xmlns="http://www.w3.org/2000/svg"
+                @click="toggleSpecificModal(showModal, 0);"
+            >
+                <path d="M22.6666 60.1667H1.83331V39.3333M39.3333 1.83333H60.1666V22.6667" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
         </div>
         <div class="desc-container">
             <p>{{ desc }}</p>
@@ -45,8 +53,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, inject, isRef} from 'vue';
-import Modal from '@/components/child/Modal.vue';
+import { ref, onMounted, inject} from 'vue';
+import Modal from '@/components/shared/Modal.vue';
+import { toggleSpecificModal } from '@/composables/modal';
 
 const props = defineProps({
     header: String,
@@ -59,37 +68,17 @@ const props = defineProps({
 let headerContainer = ref(null),
     portraitContainer = ref(null);
 
-let showModal = ref(false);
-
-let merp = ref(0);
-
-const checkMerp = (merp) => {
-    console.log(merp);
-}
+// While only a single array, needs to be an array for toggle func to work properly 
+let showModal = ref([false]);
 
 let observer = inject('observer'),
-    adjustPhotoWithScrolling = inject('adjustPhotoWithScrolling'),
-    toggleSpecificModal = inject('toggleSpecificModal');
+    adjustPhotoWithScrolling = inject('adjustPhotoWithScrolling');
 
-let changeMerp = inject('changeMerp');
+console.log('starting modal: ', showModal.value);
     
-
 onMounted(() => {
     observer.observe(headerContainer.value);
     window.addEventListener('scroll', () => {adjustPhotoWithScrolling(portraitContainer.value)});
 })
 
 </script>
-
-<style scoped>
-.modal-enter-active,
-.modal-leave-active{
-    transition: all 0.3s ease;
-}
-.modal-enter-from,
-.modal-leave-to{
-    opacity: 0;
-    transform: scale(1.1);
-}
-
-</style>

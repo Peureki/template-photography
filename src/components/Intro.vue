@@ -91,7 +91,11 @@
         * HANGING PHOTO CONTAINER
         * ONLY TABLET/MOBILE VIEW
     -->
-    <div class="hanging-photo-container" v-if="isTablet || isMobile" v-for="(photos, index) in introPhotos" :key="index">
+    <div 
+        class="hanging-photos-container" 
+        v-if="isTablet || isMobile" v-for="(photos, index) in introPhotos" :key="index"
+        :id="'hanging-photos-container-' + index"
+    >
         <div class="hanger-container">
             <svg class="hanger" height="229" viewBox="0 0 1440 229" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1442 2.45313L952.581 178.761C834.518 221.292 708.105 235.452 583.557 220.097L-30 144.453" stroke="black" stroke-width="5"/>
@@ -134,7 +138,8 @@
 
 <script setup>
 import { ref, onMounted, inject } from 'vue';
-import Modal from '@/components/child/Modal.vue';
+import { toggleSpecificModal } from '@/composables/modal';
+import Modal from '@/components/shared/Modal.vue';
 
 const props = defineProps({
     header: String,
@@ -155,8 +160,7 @@ let isMobile = inject('isMobile'),
     isDesktop = inject('isDesktop'),
     animateHeader = inject('animateHeader'),
     observer = inject('observer'),
-    adjustPhotoWithScrolling = inject('adjustPhotoWithScrolling'),
-    toggleSpecificModal = inject('toggleSpecificModal');
+    adjustPhotoWithScrolling = inject('adjustPhotoWithScrolling');
 
 onMounted(() => {
     observer.observe(headerContainer.value);
@@ -233,20 +237,7 @@ a{
     left: 20px;
     z-index: 1;
 }
-.expand{
-    position: absolute;
-    bottom: 2%;
-    right: 20px;
-    width: 1.5em;
-    height: 1.5em;
-    z-index: 1;
-    cursor: pointer;
-    transition: width 0.3s ease, height 0.3s ease;
-}
-.expand:hover{
-    width: 2em;
-    height: 2em;
-}
+
 
 .hanger{
     width: 100%;
@@ -349,15 +340,26 @@ a{
         top: 13%;
         left: 50%;
     }
+    #photo-container-0{
+        top: 2%;
+        left: 0%;
+    }
+    #photo-container-2{
+        top: 1%;
+        left: 0%;
+    }
 }
 @media only screen and (max-width: 768px){
+    #hanging-photos-container-0{
+        padding-top: 1rem;
+    }
     .section-header-container{
         padding-bottom: 9.5rem;
     }
     .circle-button-container{
-        top: 10%;
+        top: 8%;
         left: 50%;
-        transform: translate(-50%, -10%);
+        transform: translate(-50%, -8%);
     }
     .section-container{
         padding-block: unset;
@@ -384,7 +386,9 @@ a{
         left: 2%;
         margin-top: 3%;
     }
-    
+    .caption-link-line{
+        width: 50%;
+    }
     
 }
 </style>

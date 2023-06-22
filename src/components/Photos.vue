@@ -31,6 +31,13 @@
                 class="photo-borders"
                 @click="toggleSpecificModal(showModal, index)"
             ></div>
+            <svg 
+                class="expand" 
+                viewBox="0 0 62 62" fill="none" xmlns="http://www.w3.org/2000/svg"
+                @click="toggleSpecificModal(showModal, index);"
+            >
+                <path d="M22.6666 60.1667H1.83331V39.3333M39.3333 1.83333H60.1666V22.6667" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
         </div>
     </div>
 
@@ -42,7 +49,8 @@
 
 <script setup>
 import {ref, inject, onMounted} from 'vue';
-import Modal from '@/components/child/Modal.vue';
+import Modal from '@/components/shared/Modal.vue';
+import { toggleSpecificModal } from '@/composables/modal';
 
 const props = defineProps({
     header: String,
@@ -52,8 +60,7 @@ const props = defineProps({
 })
 
 let observer = inject('observer'),
-    adjustPhotoWithScrolling = inject('adjustPhotoWithScrolling'),
-    toggleSpecificModal = inject('toggleSpecificModal');
+    adjustPhotoWithScrolling = inject('adjustPhotoWithScrolling');
 
 let headerContainer = ref(null),
     photoContainer = ref(null);

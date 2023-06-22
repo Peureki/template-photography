@@ -7,6 +7,18 @@
         </div>
     </div>
 
+    <!--
+        * MODAL CONTAINER
+        * SHOWS when the user clicks on the specific photo or expand icon
+    -->
+    <Transition name="modal">
+    <Modal
+        v-if="showModal[0]"
+        :photo="portrait"
+        @close="toggleSpecificModal(showModal, 0)"
+    />
+    </Transition>
+
     <div class="grid-container">
         <div class="contact-info-container">
             <div class="info">
@@ -33,7 +45,10 @@
         <div class="portrait-container" ref="portraitContainer">
             <img :src="portrait.src" :alt="portrait.alt" :title="portrait.alt">
             <p>{{ portrait.caption }}</p>
-            <div class="portrait-borders"></div>
+            <div 
+                class="portrait-borders"
+                @click="toggleSpecificModal(showModal, 0)"
+            ></div>
         </div>
     </div>
 </div>
@@ -41,6 +56,8 @@
 
 <script setup>
 import { ref, inject, onMounted } from 'vue';
+import { toggleSpecificModal } from '@/composables/modal';
+import Modal from '@/components/shared/Modal.vue';
 
 const props = defineProps({
     header: String,
@@ -57,6 +74,9 @@ let observer = inject('observer'),
 
 let headerContainer = ref(null),
     portraitContainer = ref(null);
+
+// While only a single array, needs to be an array for toggle func to work properly 
+let showModal = ref([false]);
 
 onMounted(() => {
     observer.observe(headerContainer.value);

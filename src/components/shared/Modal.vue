@@ -45,10 +45,10 @@ const props = defineProps({
 .photo-modal-container img{
     position: fixed;
     inset: 0;
+    max-width: 90%;
+    max-height: 90%;
     margin: auto;
-    width: 90%;
-    height: 90%;
-    object-fit: cover;
+    object-fit: contain;
     z-index: 1001;
 }
 .close-modal-div{
@@ -83,8 +83,8 @@ const props = defineProps({
 }
 @media only screen and (max-width: 1024px){
     .photo-modal-container img{
-        width: 90%;
-        height: 90%;
+        max-width: 90%;
+        max-height: 90%;
     }
     .close-modal-symbol{
         top: 0%;
