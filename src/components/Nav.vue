@@ -188,6 +188,7 @@ nav{
     top: 0;
     left: 0;
     background-color: var(--color-bkg);
+    border-bottom: 1px solid var(--color-shadow);
     max-height: var(--height-nav);
     z-index: 1000;
 }
@@ -270,6 +271,7 @@ nav a{
         padding-inline: var(--padding-inline-mobile);
         padding-block: var(--padding-nav-mobile);
         background-color: var(--color-text);
+        border-bottom: unset;
     }
     .hamburger{
         position: relative;
