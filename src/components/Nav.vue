@@ -56,9 +56,7 @@
     * MOBILE NAV BAR
   -->
 <nav v-if="isMobile">
-    <a :href="`tel:${phone}`" alt="Phone" title="Click to Call" aria-label="Click to Call"><svg class="phone" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M6.62 10.79C8.06 13.62 10.38 15.93 13.21 17.38L15.41 15.18C15.68 14.91 16.08 14.82 16.43 14.94C17.55 15.31 18.76 15.51 20 15.51C20.55 15.51 21 15.96 21 16.51V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.5C8.05 3 8.5 3.45 8.5 4C8.5 5.25 8.7 6.45 9.07 7.57C9.18 7.92 9.1 8.31 8.82 8.59L6.62 10.79Z"/>
-    </svg></a>
+    <a class="nav-logo-text" href="#home">MN</a>
 
     <div 
     class="hamburger" 
@@ -189,7 +187,6 @@ nav{
     position: sticky;
     top: 0;
     left: 0;
-    border-bottom: 1px solid var(--color-shadow);
     background-color: var(--color-bkg);
     max-height: var(--height-nav);
     z-index: 1000;
@@ -261,12 +258,15 @@ nav a{
     opacity: 0;
     transition: all 0.3s ease;
 }
+.nav-logo-text{
+  font-size: var(--font-size-h1);
+  color: var(--color-buttons-n-links);
+}
 @media only screen and (max-width: 768px){
     nav{
         position: fixed;
         width: 100%;
-        bottom: 0;
-        top: unset;
+        top: 0;
         padding-inline: var(--padding-inline-mobile);
         padding-block: var(--padding-nav-mobile);
         background-color: var(--color-text);
@@ -303,6 +303,7 @@ nav a{
         height: 0dvh;
         width: 100%;
         background-color: var(--color-text);
+        padding-top: var(--padding-hero-mobile);
         z-index: 999;
         transition: height 0.3s ease;
     }
@@ -311,7 +312,7 @@ nav a{
         align-items: center;
         grid-template-rows: repeat(6, 1fr);
         height: 80dvh;
-        padding-left: var(--padding-nav-mobile)
+        padding-left: var(--padding-inline-mobile);
     }
     .nav-mobile-menu li{
         font-family: var(--font-family-p);

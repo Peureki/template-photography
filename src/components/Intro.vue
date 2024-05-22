@@ -308,6 +308,9 @@ a{
     }
 }
 @media only screen and (max-width: 1024px){
+    #home{
+        padding-top: var(--padding-hero-mobile);
+    }
     .circle-button-container{
         top: 7%;
         left: 90%;
@@ -357,7 +360,7 @@ a{
         padding-bottom: 9.5rem;
     }
     .circle-button-container{
-        top: 8%;
+        top: 11%;
         left: 50%;
         transform: translate(-50%, -8%);
     }
